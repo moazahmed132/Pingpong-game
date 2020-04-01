@@ -1,7 +1,7 @@
 const canvas = document.getElementById("pong");
-console.log("canvas", canvas)
+// console.log("canvas", canvas)
 const context = canvas.getContext("2d");
-console.log("context", context);
+// console.log("context", context);
 
 // function to draw the rectangular shape 
 drawRect = (x, y, w, h, color) => {
@@ -29,7 +29,7 @@ drawText = (text, x, y, color) => {
 
 }
 
-// create user & computer paddles
+// create user & computer paddles objects
 
 // user object 
 
@@ -61,7 +61,6 @@ const net = {
   height: 10,
   color: "white"
 }
-// function to draw the net 
 
 
 // ball object
@@ -75,11 +74,15 @@ const ball = {
   color: "white"
 
 }
+// function to draw the net 
+
 drawNet = () => {
   for (let i = 0; i <= canvas.height; i += 15) {
     drawRect(net.x, net.y + i, net.width, net.height, net.color);
   }
 }
+
+
 // function to reset the ball after anyone wins
 resetBall = () => {
   ball.x = canvas.width / 2;
@@ -87,10 +90,6 @@ resetBall = () => {
   ball.speed = 5;
   ball.velocityX = -ball.velocityX;
 }
-
-
-// function to know if the ball hit the paddle
-// b for ball and p for paddle
 
 
 render = () => {
@@ -112,7 +111,6 @@ render = () => {
 
 }
 
-
 // function to move the paddle
 movePaddle = (event) => {
   let rect = canvas.getBoundingClientRect();
@@ -121,6 +119,8 @@ movePaddle = (event) => {
 }
 canvas.addEventListener("mousemove", movePaddle);
 
+// function to know if the ball hit the paddle
+// b for ball and p for paddle
 
 collision = (b, p) => {
   // paddle edges detection
@@ -137,6 +137,9 @@ collision = (b, p) => {
 
   return b.right > p.left && b.bottom > p.top && b.left < p.right && b.top < p.bottom;
 }
+
+// function to update the game with new changes 
+
 update = () => {
   ball.x += ball.velocityX;
   ball.y += ball.velocityY;
@@ -148,7 +151,9 @@ update = () => {
   if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
     ball.velocityY = -ball.velocityY;
   }
+
   let player = (ball.x < canvas.width / 2) ? user : com;
+
   if (collision(ball, player)) {
     let collidePoint = (ball.y - (player.y + player.height / 2));
     collidePoint = collidePoint / (player.height / 2) // to make it between 1 : -1
@@ -160,10 +165,11 @@ update = () => {
 
     ball.speed += .5;
   }
+  // if the ball move out from the box
   if (ball.x - ball.radius < 0) {
 
     com.score++;
-    console.log("update -> com.score", com.score)
+    // console.log("update -> com.score", com.score)
     resetBall();
   } else if (ball.x + ball.radius > canvas.width) {
     user.score++;
@@ -171,14 +177,10 @@ update = () => {
   }
 }
 
-
-
-
-
-
 Game = () => {
   render();
   update();
 }
+
 const framePerSecond = 50;
 setInterval(Game, 1000 / framePerSecond);
